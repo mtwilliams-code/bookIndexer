@@ -3,4 +3,4 @@
 Specifications
 --------------
 
-You can find specifications in the [specs.html](./specs.html) file included in this repo.
+You can find specifications in the [spec.html](./spec.html) file included in this repo.
