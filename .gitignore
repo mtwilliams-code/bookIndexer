@@ -1,4 +1,4 @@
 a.out
-test.cpp
 *.o
 *.exe
+testcases/*

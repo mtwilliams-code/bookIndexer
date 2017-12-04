@@ -15,6 +15,7 @@ void Book::addChapter(Chapter* C) {
 }
 
 void Book::printSynonyms() {
+    cout << "\nSynonyms:\n";
     map<string,string>::iterator itr;
     for(itr=synonyms.begin(); itr !=synonyms.end(); ++itr){
         cout << itr->first << " " << itr->second << endl;
@@ -22,6 +23,7 @@ void Book::printSynonyms() {
 }
 
 void Book::printIgnored() {
+    cout << "\nIgnored words:\n";
     set<string>::iterator itr;
     for(auto ignored : ignore){
         cout << ignored << endl;

@@ -66,7 +66,7 @@ unique_ptr<Book> Reader::read()
         string ignoredWord;
         line << nextLine;
         line >> ignoredWord;
-        if (ignoredWord != "chapter")
+        if (ignoredWord != "chapter" && !ignoredWord.empty())
             ignore.emplace(ignoredWord);
     }
 
