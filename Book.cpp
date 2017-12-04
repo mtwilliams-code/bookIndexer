@@ -17,6 +17,6 @@ void Book::addChapter(Chapter* C) {
 void Book::printSynonyms() {
     map<string,string>::iterator itr;
     for(itr=synonyms.begin(); itr !=synonyms.end(); ++itr){
-        cout << itr->first << " " << itr->second;
+        cout << itr->first << " " << itr->second << endl;
     }
 }

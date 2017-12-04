@@ -6,6 +6,7 @@
 #include <sstream>
 #include <set>
 #include <memory>
+#include <algorithm>
 #include "Book.hpp"
 #include "Chapter.hpp"
 #include "Paragraph.hpp"
@@ -14,7 +15,8 @@
 
 class Reader {
   private:
-    std::string removePunc( std::string text );
+    void stringToLower(std::string& sl);
+    void removePunc( std::string& text );
     bool isBlankLine(char const *line);
     bool isBlankLine(std::string const &line);
     std::ifstream bookFile;

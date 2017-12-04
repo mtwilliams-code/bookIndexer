@@ -2,7 +2,11 @@
 
 using namespace std;
 
-string Reader::removePunc(string text)
+void Reader::stringToLower(std::string& sl) {
+    transform(sl.begin(), sl.end(), sl.begin(), ::tolower);
+}
+
+void Reader::removePunc(string& text)
 {
     for (int i = 0, len = text.size(); i < len; i++)
     {
@@ -12,7 +16,6 @@ string Reader::removePunc(string text)
             len = text.size();
         }
     }
-    return text;
 }
 bool Reader::isBlankLine(char const *line)
 {
@@ -56,7 +59,8 @@ unique_ptr<Book> Reader::read()
     while (!synonymFile.eof())
     {
         getline(synonymFile, nextLine);
-        nextLine = removePunc(nextLine);
+        removePunc(nextLine);
+        stringToLower(nextLine);
         string root, syn;
         stringstream line;
         line << nextLine;
@@ -66,6 +70,15 @@ unique_ptr<Book> Reader::read()
             synonyms.emplace(syn, root);
         }
     }
+    map<string,string>::iterator itr1, itr2;
+    for(itr1=synonyms.begin(); itr1!=synonyms.end(); ++itr1) {
+        itr2 = itr1;
+        while ( (itr2 = synonyms.find(itr2->second)) != synonyms.end()){
+            itr1->second = itr2->second;
+        }
+    }
+    
+
     set<string> ignore;
     auto finishedBook = make_unique<Book>(synonyms, ignore);
 
