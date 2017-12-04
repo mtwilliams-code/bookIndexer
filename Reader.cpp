@@ -2,6 +2,15 @@
 
 using namespace std;
 
+
+void Reader::removeWord(string& S, string& toRemove) {
+    string::size_type n = toRemove.length();
+    for (string::size_type i = S.find(toRemove);
+        i != string::npos;
+        i = S.find(toRemove))
+        S.erase(i, n);
+}
+
 void Reader::stringToLower(std::string &sl)
 {
     transform(sl.begin(), sl.end(), sl.begin(), ::tolower);
@@ -55,6 +64,7 @@ Reader::~Reader()
 
 unique_ptr<Book> Reader::read()
 {
+    // reads and stores the ignore file as a set, to be passed to the Book.
     set<string> ignore;
     while (!ignoreFile.eof())
     {
@@ -70,6 +80,7 @@ unique_ptr<Book> Reader::read()
             ignore.emplace(ignoredWord);
     }
 
+    //reads and stores the synonym file to be passed to the book. 
     map<string, string> synonyms;
     while (!synonymFile.eof())
     {
@@ -86,6 +97,7 @@ unique_ptr<Book> Reader::read()
             synonyms.emplace(syn, root);
         }
     }
+    //adds synonyms for ignored words to ignore list
     for (map<string, string>::iterator itr1 = synonyms.begin(); itr1 != synonyms.end(); ++itr1)
     {
         map<string, string>::iterator itr2 = itr1;
@@ -102,6 +114,7 @@ unique_ptr<Book> Reader::read()
             }
         }
     }
+    //changes synonyms to farthest synonym
     for (map<string, string>::iterator itr1 = synonyms.begin(); itr1 != synonyms.end(); ++itr1)
     {
         map<string, string>::iterator itr2 = itr1;
@@ -110,18 +123,37 @@ unique_ptr<Book> Reader::read()
             itr1->second = itr2->second;
         }
     }
-
+    int count = 1;
     auto finishedBook = make_unique<Book>(synonyms, ignore);
-
-    /*
     while (!bookFile.eof())
     {
+        /*cout << "start loop << " << count << endl; //debug output */
+        //reads first line of paragraph
+        string nextLine;
+        stringstream nextPara;
         getline(bookFile, nextLine);
-        nextLine = removePunc(nextLine);
-        if (!isBlankLine(nextLine))
+        removePunc(nextLine);
+        stringToLower(nextLine);
+        //reads each next line of paragraph until arrives at blank line (consists of just whitespace)
+        while (!isBlankLine(nextLine) && !bookFile.eof())
         {
+            /*cout << "Read \"" << nextLine << endl; //debug output*/
+            nextPara << nextLine;
+            getline(bookFile, nextLine);
+            removePunc(nextLine);
+            stringToLower(nextLine);
         }
+        //checks if paragraph is chapter title
+        string firstWord, secondWord, thirdWord, secondLine;
+        int loc = nextPara.tellg();
+        nextPara >> firstWord; nextPara >> secondWord; nextPara >> thirdWord;
+        getline(nextPara, nextLine);
+        if (firstWord == "chapter" && secondWord != "" && thirdWord == "" && isBlankLine(nextLine)) {
+            cout << "found a chapter titled " << secondWord << endl; //debug output
+        }
+        /*cout << "end loop " << count++ << endl; //debug output */
+        nextPara.seekg(loc);
+
     }
-*/
     return move(finishedBook);
 }

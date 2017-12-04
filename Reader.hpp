@@ -15,6 +15,7 @@
 
 class Reader {
   private:
+    void removeWord(std::string& S, std::string& toRemove);
     void stringToLower(std::string& sl);
     void removePunc( std::string& text );
     bool isBlankLine(char const *line);
