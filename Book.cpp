@@ -20,3 +20,10 @@ void Book::printSynonyms() {
         cout << itr->first << " " << itr->second << endl;
     }
 }
+
+void Book::printIgnored() {
+    set<string>::iterator itr;
+    for(auto ignored : ignore){
+        cout << ignored << endl;
+    }
+}

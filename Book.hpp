@@ -18,6 +18,7 @@ class Book {
         ~Book();
         void addChapter(Chapter* C);
         void printSynonyms();
+        void printIgnored();
 };
 
 
