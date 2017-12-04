@@ -2,7 +2,6 @@
 #include <list>
 #include <iterator>
 #include <string>
-#include <fstream>
 #include "Paragraph.hpp"
 #ifndef CHAPTER
 #define CHAPTER
@@ -13,7 +12,8 @@ class Chapter{
     public:
         Chapter();
         ~Chapter();
-
+        void addParagraph(Paragraph& P);
+        
 };
 
 #endif
