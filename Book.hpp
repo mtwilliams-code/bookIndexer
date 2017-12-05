@@ -3,22 +3,30 @@
 #include <map>
 #include <set>
 #include <string>
+#include <memory>
 #include <iostream>
+#include <sstream>
 #include "Chapter.hpp"
 #ifndef BOOK
 #define BOOK
 
 class Book {
     private:
-        std::list<Chapter*> chapters;
+        std::list<Chapter> chapters;
         std::map<std::string, std::string> synonyms;
         std::set<std::string> ignore;
     public:
         Book( std::map<std::string,std::string>& S, std::set<std::string>& I );
         ~Book();
-        void addChapter(Chapter* C);
-        void printSynonyms();
-        void printIgnored();
+        void addChapter(Chapter C);
+        void addChapter(std::string title);
+        void printSynonyms() const;
+        void printIgnored() const;
+        void printChapters() const;
+        void printBook() const;
+        void addParagraph(std::unique_ptr<std::stringstream> P);
+        Chapter* getChapter(int N) const;
+        int getChapterCount() const;
 };
 
 

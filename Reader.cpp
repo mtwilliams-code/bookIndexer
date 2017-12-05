@@ -2,12 +2,12 @@
 
 using namespace std;
 
-
-void Reader::removeWord(string& S, string& toRemove) {
+void Reader::removeWord(string &S, string &toRemove)
+{
     string::size_type n = toRemove.length();
     for (string::size_type i = S.find(toRemove);
-        i != string::npos;
-        i = S.find(toRemove))
+         i != string::npos;
+         i = S.find(toRemove))
         S.erase(i, n);
 }
 
@@ -80,7 +80,7 @@ unique_ptr<Book> Reader::read()
             ignore.emplace(ignoredWord);
     }
 
-    //reads and stores the synonym file to be passed to the book. 
+    //reads and stores the synonym file to be passed to the book.
     map<string, string> synonyms;
     while (!synonymFile.eof())
     {
@@ -123,8 +123,11 @@ unique_ptr<Book> Reader::read()
             itr1->second = itr2->second;
         }
     }
-    int count = 1;
-    auto finishedBook = make_unique<Book>(synonyms, ignore);
+
+    // debug stuff int count = 1;
+    unique_ptr<Book> newBook = make_unique<Book>(synonyms, ignore);
+    Chapter *newChap;
+    int paraNumber = 0;
     while (!bookFile.eof())
     {
         /*cout << "start loop << " << count << endl; //debug output */
@@ -138,22 +141,81 @@ unique_ptr<Book> Reader::read()
         while (!isBlankLine(nextLine) && !bookFile.eof())
         {
             /*cout << "Read \"" << nextLine << endl; //debug output*/
-            nextPara << nextLine;
+            string word;
+            stringstream nextLineStream;
+            nextLineStream << nextLine;
+            while(nextLineStream >> word) {
+                if (!ignore.count(word)) {
+                    map<string, string>::iterator itr;
+                    if ((itr = synonyms.find(word)) != synonyms.end())
+                    {
+                        word = itr->second;
+                    }
+                    nextPara << word << " ";
+                }
+            }
             getline(bookFile, nextLine);
             removePunc(nextLine);
             stringToLower(nextLine);
         }
+        
         //checks if paragraph is chapter title
         string firstWord, secondWord, thirdWord, secondLine;
         int loc = nextPara.tellg();
-        nextPara >> firstWord; nextPara >> secondWord; nextPara >> thirdWord;
+        nextPara >> firstWord;
+        nextPara >> secondWord;
+        nextPara >> thirdWord;
         getline(nextPara, nextLine);
-        if (firstWord == "chapter" && secondWord != "" && thirdWord == "" && isBlankLine(nextLine)) {
+        if (firstWord == "chapter" && secondWord != "" && thirdWord == "" && isBlankLine(nextLine))
+        {                  // if it is chapter, another word, and then a blank line, it is a chapter title
             cout << "found a chapter titled " << secondWord << endl; //debug output
+            newBook->addChapter(secondWord);
+            paraNumber = 0;
         }
-        /*cout << "end loop " << count++ << endl; //debug output */
-        nextPara.seekg(loc);
+        else 
+        {
+            nextPara.seekg(loc);
+            unique_ptr<stringstream> newPara = make_unique<stringstream>();
+            *newPara << nextPara.rdbuf();
+            newBook->addParagraph(move(newPara));
+        }
 
+        
+       /* THOWING SEGFAULTS HERE
+        else
+        { // else it is not a chapter titlea and is a normal paragraph
+            int lineNumber = 0;
+            paraNumber++;
+            nextPara.seekg(loc);
+            newPara = new Paragraph(newChap->getChapterTitle());
+            while (getline(nextPara, nextLine))
+            {
+                lineNumber++;
+                stringstream tempLine;
+                tempLine << nextLine;
+                while (tempLine >> firstWord)
+                {
+                    //if not in ignore
+                    if (!ignore.count(firstWord))
+                    {
+                        map<string, string>::iterator itr;
+                        // if in synonym, replace with word it means
+                        if ((itr = synonyms.find(firstWord)) != synonyms.end())
+                        {
+                            firstWord = itr->second;
+                        }
+                        //add to paragraph
+                        newPara->addWord(firstWord,paraNumber,lineNumber);
+                    }
+                }
+                //add paragraph to last chapter (first check for null)
+                if (newChap != NULL)
+                {
+                    newChap->addParagraph(newPara);
+                }
+            }
+        }*/
     }
-    return move(finishedBook);
+    return move(newBook);
 }
+
