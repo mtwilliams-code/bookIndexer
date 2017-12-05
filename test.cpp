@@ -7,22 +7,39 @@
 #include "Reader.hpp"
 using namespace std;
 
-int main() {
+int main(int argc, char *argv[])
+{
 
-    cout << "Enter number of test case you would like to run: ";
-    string num;
-    cin >> num;
+        string num;
+        string bookname, synname, ignorename;
+    if ((argc != 2) && (argc != 4))
+    {
+        cout << "Invalid arguments";
+        return 100;
+    }
+    else if (argc == 2) {
+        num = string(argv[1]);
+        bookname = "./testcases/" + num + "_book.txt";
+        synname = "./testcases/" + num + "_synonyms.txt";
+        ignorename = "./testcases/" + num + "_ignore.txt";
+    }
+    else if (argc == 4) {
+        bookname = string(argv[1]);
+        synname = string(argv[2]);
+        ignorename = string(argv[3]);
+    }
 
-    string bookname, synname, ignorename;
-    bookname = "./testcases/" + num + "_book.txt";
-    synname = "./testcases/" + num + "_synonyms.txt";
-    ignorename = "./testcases/" + num + "_ignore.txt";
 
-    Reader reader_(bookname,synname,ignorename);
-    unique_ptr<Book> book_ = reader_.read();
-    book_->printSynonyms();
-    book_->printIgnored();
+        Reader reader_(bookname, synname, ignorename);
+        unique_ptr<Book> book_ = reader_.read();
+        book_->printSynonyms();
+        book_->printIgnored();
+        book_->printChapters();
+        cout << endl;
+        book_->printBook();
 
+
+    /*
     cout << endl;
     string test = "this is\n";
     string test2 = "this is a test\n";
@@ -53,5 +70,5 @@ int main() {
     cout << "First word: " << firstWord << endl 
         << "Second word: " << secondWord << endl 
         << "Third word: " << thirdWord << endl;
-
+*/
 }
