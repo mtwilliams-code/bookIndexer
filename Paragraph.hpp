@@ -7,23 +7,23 @@
 #ifndef PARAGRAPH
 #define PARAGRAPH
 
-class Paragraph{
-    private:
-        std::map <std::string, int> occurances;
-        std::map <std::string, std::string> location;
-        std::unique_ptr<std::stringstream> text;
-        std::string chapterTitle;
-        int paragraphNumber;
-        void addWord(std::string word, int paraNum, int lineNum); //will check if word is already in multimap and then either add it and the location or just increment occurances
+class Paragraph
+{
+  private:
+    std::map<std::string, int> occurrences;
+    std::map<std::string, std::string> location;
+    std::unique_ptr<std::stringstream> text;
+    std::string chapterTitle;
+    int paragraphNumber;
+    void addWord(std::string word, int paraNum, int lineNum); //will check if word is already in multimap and then either add it and the location or just increment occurances
 
-    public:
-        Paragraph(std::unique_ptr<std::stringstream> S, int paraNumber, std::string title);
-        Paragraph(const Paragraph &P);
-        ~Paragraph();
-        int getWordOccuranceCount(std::string S);
-        void printParagraph() const;
-        std::string getIndexEntry(std::string word) const;
-
+  public:
+    Paragraph(std::unique_ptr<std::stringstream> S, int paraNumber, std::string title);
+    Paragraph(const Paragraph &P);
+    ~Paragraph();
+    int getWordOccuranceCount(std::string S) const;
+    void printParagraph() const;
+    std::string getIndexEntry(std::string word) const;
 };
 
 #endif

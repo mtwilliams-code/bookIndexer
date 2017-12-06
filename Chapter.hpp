@@ -9,21 +9,23 @@
 #ifndef CHAPTER
 #define CHAPTER
 
-class Chapter{
-    private:
-        std::list <Paragraph> paragraphs;
-        const std::string chapterTitle;
-        int paragraphNumber;
-    public:
-        Chapter(std::string S) : chapterTitle(S), paragraphNumber(0) {};
-        ~Chapter();
-        std::string getChapterTitle() const {return chapterTitle;};
-        void addParagraph(std::unique_ptr<std::stringstream> P);
-        Paragraph* getParagraph(int N) const;
-        int getParagraphCount() const;
-        void printChapter() const;
-        void getIndexEntries(std::string word) const;
-        
+class Chapter
+{
+  private:
+    std::list<Paragraph> paragraphs;
+    const std::string chapterTitle;
+    int paragraphNumber;
+
+  public:
+    Chapter(std::string S) : chapterTitle(S), paragraphNumber(0){};
+    ~Chapter();
+    std::string getChapterTitle() const { return chapterTitle; };
+    void addParagraph(std::unique_ptr<std::stringstream> P);
+    Paragraph *getParagraph(int N) const;
+    int getParagraphCount() const;
+    void printChapter() const;
+    std::string getIndexEntries(std::string word) const;
+    int getOccurrances(std::string word) const;
 };
 
 #endif

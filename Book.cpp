@@ -32,6 +32,11 @@ void Book::addWord(string word)
     allWords.insert(word);
 }
 
+void Book::removeWord(string word)
+{
+    allWords.erase(word);
+}
+
 void Book::printSynonyms() const
 {
     cout << "\nSynonyms:\n";
@@ -66,7 +71,17 @@ void Book::printBook() const
         C.printChapter();
     }
 }
-void Book::printIndex()
-{
 
+void Book::printIndex() const
+{
+    
+}
+
+void Book::printAllWords() const
+{
+    cout << "List of all words in book: ";
+    for (const auto& word : allWords)
+    {
+        cout << word << ", ";
+    }
 }

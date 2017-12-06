@@ -175,7 +175,8 @@ unique_ptr<Book> Reader::read()
                     {
                         word = itr->second;
                     }
-                    if (!isBlankLine(word)) {
+                    if (!isBlankLine(word))
+                    {
                         newBook->addWord(word);
                         finishedLineStream << word << " ";
                     }
@@ -189,7 +190,8 @@ unique_ptr<Book> Reader::read()
             finishedLineStream.str("");
             finishedLineStream << finishedNextLine;
 
-            if (!isBlankLine(finishedNextLine)){
+            if (!isBlankLine(finishedNextLine))
+            {
                 finishedLineStream << "\n";
             }
 
@@ -213,8 +215,9 @@ unique_ptr<Book> Reader::read()
         temp >> secondWord;
         temp >> thirdWord;
         if (firstWord == "chapter" && secondWord != "" && thirdWord == "" && isBlankLine(secondLine))
-        {                                                            // if it is chapter, another word, and then a blank line, it is a chapter title
+        { // if it is chapter, another word, and then a blank line, it is a chapter title
             newBook->addChapter(secondWord);
+            newBook->removeWord(secondWord);
         } //otherwise adds paragraph
         else
         {
@@ -223,7 +226,6 @@ unique_ptr<Book> Reader::read()
             *newPara << nextPara.str();
             newBook->addParagraph(move(newPara));
         }
-
     }
     return move(newBook);
 }

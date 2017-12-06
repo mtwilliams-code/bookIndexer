@@ -4,10 +4,10 @@ using namespace std;
 
 void Paragraph::addWord(std::string word, int paraNum, int lineNum)
 {
-    occurances[word]++;
+    occurrences[word]++;
     string loc = chapterTitle + ":P" + to_string(paraNum) + "L" + to_string(lineNum);
     location.insert(pair<string, string>(word, loc));
-    //cout << "Adding word \"" << word << "\" to paragraph at location " << loc << " occurance " << occurances[word] << endl; //debug
+    //cout << "Adding word \"" << word << "\" to paragraph at location " << loc << " occurance " << occurrences[word] << endl; //debug
 }
 
 Paragraph::Paragraph(std::unique_ptr<std::stringstream> S, int paraNumber, string title) : chapterTitle(title), paragraphNumber(paraNumber)
@@ -31,7 +31,7 @@ Paragraph::Paragraph(std::unique_ptr<std::stringstream> S, int paraNumber, strin
 
 Paragraph::Paragraph(const Paragraph &P)
 {
-    this->occurances = P.occurances;
+    this->occurrences = P.occurrences;
     this->location = P.location;
     this->text = make_unique<stringstream>();
     *(this->text) << P.text->str();
@@ -39,7 +39,7 @@ Paragraph::Paragraph(const Paragraph &P)
 
 Paragraph::~Paragraph()
 {
-    occurances.clear();
+    occurrences.clear();
     location.clear();
 }
 
@@ -57,3 +57,11 @@ string Paragraph::getIndexEntry(string word) const
     return "";
 }
 
+int Paragraph::getWordOccuranceCount(string S) const
+{
+    map<string, int>::const_iterator itr = occurrences.find(S);
+    if ( itr != occurrences.end() ) {
+        return itr->second;
+    }
+    return 0;   
+}

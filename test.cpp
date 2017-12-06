@@ -7,12 +7,12 @@
 #include "Reader.hpp"
 using namespace std;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 
     string num;
     string bookname, synname, ignorename;
-    if ( argc == 4 )
+    if (argc == 4)
     {
         bookname = "./testcases/" + string(argv[1]);
         synname = "./testcases/" + string(argv[2]);
@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
         synname = "./testcases/" + num + "_synonyms.txt";
         ignorename = "./testcases/" + num + "_ignore.txt";
     }
-    else 
+    else
     {
         cout << "Invalid arguments" << endl;
         return 100;
@@ -35,6 +35,7 @@ int main(int argc, char* argv[])
     book_->printSynonyms();
     book_->printIgnored();
     book_->printChapters();
+    book_->printAllWords();
     cout << endl;
     book_->printBook();
 
