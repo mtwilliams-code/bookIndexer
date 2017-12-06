@@ -7,7 +7,7 @@ void Paragraph::addWord(std::string word, int paraNum, int lineNum)
     occurances[word]++;
     string loc = chapterTitle + ":P" + to_string(paraNum) + "L" + to_string(lineNum);
     location.insert(pair<string, string>(word, loc));
-    cout << "Adding word \"" << word << "\" to paragraph at location " << loc << endl;
+    //cout << "Adding word \"" << word << "\" to paragraph at location " << loc << endl; //debug
 }
 
 Paragraph::Paragraph(std::unique_ptr<std::stringstream> S, int paraNumber, string title) : chapterTitle(title), paragraphNumber(paraNumber)

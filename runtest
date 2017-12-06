@@ -2,22 +2,22 @@
 clear
 make all
 echo "test 1"
-./test.exe 1
+./index 1
 echo "test 2"
-./test.exe 2
+./index 2
 echo "test 3"
-./test.exe 3
+./index 3
 echo "test 4"
-./test.exe 4
+./index 4
 echo "test 5"
-./test.exe 5
+./index 5
 echo "test 5"
-./test.exe 5_book.txt 5_synonyms.txt 5_ignore.txt
+./index 5_book.txt 5_synonyms.txt 5_ignore.txt
 echo "test 4"
-./test.exe 4_book.txt 4_synonyms.txt 4_ignore.txt
+./index 4_book.txt 4_synonyms.txt 4_ignore.txt
 echo "test 3"
-./test.exe 3_book.txt 3_synonyms.txt 3_ignore.txt
+./index 3_book.txt 3_synonyms.txt 3_ignore.txt
 echo "test 2"
-./test.exe 2_book.txt 2_synonyms.txt 2_ignore.txt
+./index 2_book.txt 2_synonyms.txt 2_ignore.txt
 echo "test 1"
-./test.exe 1_book.txt 1_synonyms.txt 1_ignore.txt
+./index 1_book.txt 1_synonyms.txt 1_ignore.txt

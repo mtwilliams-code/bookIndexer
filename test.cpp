@@ -14,7 +14,6 @@ int main(int argc, char* argv[])
     string bookname, synname, ignorename;
     if ( argc == 4 )
     {
-        cout << 4 << endl;
         bookname = "./testcases/" + string(argv[1]);
         synname = "./testcases/" + string(argv[2]);
         ignorename = "./testcases/" + string(argv[3]);
