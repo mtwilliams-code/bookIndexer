@@ -22,6 +22,7 @@ class Chapter{
         Paragraph* getParagraph(int N) const;
         int getParagraphCount() const;
         void printChapter() const;
+        void getIndexEntries(std::string word) const;
         
 };
 

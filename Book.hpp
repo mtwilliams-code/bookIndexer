@@ -27,6 +27,7 @@ class Book {
         void printBook() const;
         void addParagraph(std::unique_ptr<std::stringstream> P);
         void addWord(std::string word);
+        void printIndex();
         Chapter* getChapter(int N) const;
         int getChapterCount() const;
 };

@@ -10,7 +10,7 @@
 class Paragraph{
     private:
         std::map <std::string, int> occurances;
-        std::multimap <std::string, std::string> location;
+        std::map <std::string, std::string> location;
         std::unique_ptr<std::stringstream> text;
         std::string chapterTitle;
         int paragraphNumber;
@@ -22,6 +22,7 @@ class Paragraph{
         ~Paragraph();
         int getWordOccuranceCount(std::string S);
         void printParagraph() const;
+        std::string getIndexEntry(std::string word) const;
 
 };
 
