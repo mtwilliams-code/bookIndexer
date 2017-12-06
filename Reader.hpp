@@ -6,6 +6,7 @@
 #include <sstream>
 #include <set>
 #include <memory>
+#include <exception>
 #include <algorithm>
 #include "Book.hpp"
 #include "Chapter.hpp"

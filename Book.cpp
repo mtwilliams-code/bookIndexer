@@ -23,6 +23,11 @@ void Book::addParagraph(unique_ptr<stringstream> P){
         chapters.back().addParagraph(move(P));
 }
 
+void Book::addWord(string word) 
+{
+    allWords.insert(word);
+}
+
 void Book::printSynonyms() const{
     cout << "\nSynonyms:\n";
     for( const auto& synonym : synonyms ) {

@@ -6,7 +6,7 @@
 # Comments start with a # and go to the end of the line.
 
 # Here is a simple Make Macro.
-LINK_TARGET = test.exe
+LINK_TARGET = index
 
 # Here is a Make Macro that uses the backslash to extend to multiple lines.
 OBJS =  \

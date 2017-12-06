@@ -7,37 +7,37 @@
 #include "Reader.hpp"
 using namespace std;
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 
-        string num;
-        string bookname, synname, ignorename;
-    if ((argc != 2) && (argc != 4))
+    string num;
+    string bookname, synname, ignorename;
+    if ( argc == 4 )
     {
-        cout << "Invalid arguments";
-        return 100;
+        cout << 4 << endl;
+        bookname = "./testcases/" + string(argv[1]);
+        synname = "./testcases/" + string(argv[2]);
+        ignorename = "./testcases/" + string(argv[3]);
     }
-    else if (argc == 2) {
+    else if (argc == 2)
+    {
         num = string(argv[1]);
         bookname = "./testcases/" + num + "_book.txt";
         synname = "./testcases/" + num + "_synonyms.txt";
         ignorename = "./testcases/" + num + "_ignore.txt";
     }
-    else if (argc == 4) {
-        bookname = string(argv[1]);
-        synname = string(argv[2]);
-        ignorename = string(argv[3]);
+    else 
+    {
+        cout << "Invalid arguments" << endl;
+        return 100;
     }
-
-
-        Reader reader_(bookname, synname, ignorename);
-        unique_ptr<Book> book_ = reader_.read();
-        book_->printSynonyms();
-        book_->printIgnored();
-        book_->printChapters();
-        cout << endl;
-        book_->printBook();
-
+    Reader reader_(bookname, synname, ignorename);
+    unique_ptr<Book> book_ = reader_.read();
+    book_->printSynonyms();
+    book_->printIgnored();
+    book_->printChapters();
+    cout << endl;
+    book_->printBook();
 
     /*
     cout << endl;

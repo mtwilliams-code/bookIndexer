@@ -10,8 +10,8 @@ void Chapter::addParagraph(unique_ptr<stringstream> P) {
 }
 
 void Chapter::printChapter() const {
-    cout << "Chapter " << chapterTitle << endl;
-    cout << "--------------------------------------"<<endl<<endl;
+    cout << "\nChapter " << chapterTitle << ", " << paragraphNumber << " paragraphs" << endl;
+    cout << "--------------------------------------"<<endl;
     for (const auto& P : paragraphs)
     {
         P.printParagraph();

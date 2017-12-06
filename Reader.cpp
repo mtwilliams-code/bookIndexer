@@ -29,9 +29,9 @@ void Reader::removePunc(string &text)
 }
 bool Reader::isBlankLine(char const *line)
 {
-    for (char const *cp = line; *cp; ++cp)
+    for (char const *cp = line; *cp != '\0'; ++cp)
     {
-        if (!isspace(*cp))
+        if (!isspace(*cp) && !(*cp == '\n'))
             return false;
     }
     return true;
@@ -44,15 +44,36 @@ bool Reader::isBlankLine(string const &line)
 
 Reader::Reader(std::string bookFileName, std::string synonym, std::string ignore)
 {
-    /*bookFile.exceptions ( ifstream::failbit | ifstream::badbit );
-    try{*/
-    bookFile.open(bookFileName.c_str()); /*
-    } 
-    catch (const ifstream::failure& e) {
-    std::cout << "Exception opening/reading file";
-  }*/
-    synonymFile.open(synonym.c_str());
-    ignoreFile.open(ignore.c_str());
+    exception e;
+    try
+    {
+        bookFile.open(bookFileName.c_str());
+        if (bookFile.fail()) // throw only when needed
+        {
+            cout << string("Exception opening/reading file \"" + bookFileName + "\"\n"); // more accurate exception
+            throw e;
+        }
+        synonymFile.open(synonym.c_str());
+        if (synonymFile.fail()) // throw only when needed
+        {
+            cout << string("Exception opening/reading file \"" + bookFileName + "\"\n"); // more accurate exception
+            throw e;
+        }
+        ignoreFile.open(ignore.c_str());
+        if (ignoreFile.fail()) // throw only when needed
+        {
+            cout << string("Exception opening/reading file \"" + bookFileName + "\"\n"); // more accurate exception
+            throw e;
+        }
+    }
+    catch (exception &error)
+    {
+        cout << "Some error occured in Reader instantiation. Exiting.. \n";
+        bookFile.close();
+        synonymFile.close();
+        ignoreFile.close();
+        throw("broken");
+    }
 }
 
 Reader::~Reader()
@@ -69,7 +90,7 @@ unique_ptr<Book> Reader::read()
     while (!ignoreFile.eof())
     {
         string nextLine;
-        getline(ignoreFile, nextLine);
+        std::getline(ignoreFile, nextLine);
         removePunc(nextLine);
         stringToLower(nextLine);
         stringstream line;
@@ -85,7 +106,7 @@ unique_ptr<Book> Reader::read()
     while (!synonymFile.eof())
     {
         string nextLine;
-        getline(synonymFile, nextLine);
+        std::getline(synonymFile, nextLine);
         removePunc(nextLine);
         stringToLower(nextLine);
         string root, syn;
@@ -126,62 +147,87 @@ unique_ptr<Book> Reader::read()
 
     // debug stuff int count = 1;
     unique_ptr<Book> newBook = make_unique<Book>(synonyms, ignore);
-    Chapter *newChap;
-    int paraNumber = 0;
     while (!bookFile.eof())
     {
         /*cout << "start loop << " << count << endl; //debug output */
         //reads first line of paragraph
         string nextLine;
         stringstream nextPara;
-        getline(bookFile, nextLine);
-        removePunc(nextLine);
-        stringToLower(nextLine);
+        nextLine = "some none-empty string";
         //reads each next line of paragraph until arrives at blank line (consists of just whitespace)
         while (!isBlankLine(nextLine) && !bookFile.eof())
         {
-            /*cout << "Read \"" << nextLine << endl; //debug output*/
+            std::getline(bookFile, nextLine);
+            removePunc(nextLine);
+            stringToLower(nextLine);
+            cout << "Read \"" << nextLine << endl; //debug output*/
             string word;
             stringstream nextLineStream;
-            nextLineStream << nextLine;
-            while(nextLineStream >> word) {
-                if (!ignore.count(word)) {
+            stringstream finishedLineStream;
+            if (!isBlankLine(nextLine))
+                nextLineStream << nextLine;
+            while (nextLineStream >> word)
+            {
+                if (!ignore.count(word))
+                {
                     map<string, string>::iterator itr;
                     if ((itr = synonyms.find(word)) != synonyms.end())
                     {
                         word = itr->second;
                     }
-                    nextPara << word << " ";
+                    if (!isBlankLine(word)) {
+                        newBook->addWord(word);
+                        finishedLineStream << word << " ";
+                    }
                 }
             }
-            getline(bookFile, nextLine);
-            removePunc(nextLine);
-            stringToLower(nextLine);
+            string finishedNextLine = finishedLineStream.str();
+            std::size_t pos;
+            if ((pos = finishedNextLine.find('\n')) != string::npos)
+                finishedNextLine.erase(pos, 1);
+
+            finishedLineStream.str("");
+            finishedLineStream << finishedNextLine;
+
+            if (!isBlankLine(finishedNextLine)){
+                finishedLineStream << "\n";
+            }
+
+            nextPara << finishedLineStream.str();
         }
-        
+
+        if (isBlankLine(nextPara.str()))
+        {
+            nextPara << "\n";
+        }
+
+        stringstream temp;
         //checks if paragraph is chapter title
-        string firstWord, secondWord, thirdWord, secondLine;
+        string firstWord, secondWord, thirdWord, firstLine, secondLine;
         int loc = nextPara.tellg();
-        nextPara >> firstWord;
-        nextPara >> secondWord;
-        nextPara >> thirdWord;
-        getline(nextPara, nextLine);
-        if (firstWord == "chapter" && secondWord != "" && thirdWord == "" && isBlankLine(nextLine))
-        {                  // if it is chapter, another word, and then a blank line, it is a chapter title
+        cout << "\nParagraph: " << nextPara.str() << endl;
+        nextPara.seekg(loc);
+        std::getline(nextPara, firstLine);
+        std::getline(nextPara, secondLine);
+        temp << firstLine;
+        temp >> firstWord;
+        temp >> secondWord;
+        temp >> thirdWord;
+        if (firstWord == "chapter" && secondWord != "" && thirdWord == "" && isBlankLine(secondLine))
+        {                                                            // if it is chapter, another word, and then a blank line, it is a chapter title
             cout << "found a chapter titled " << secondWord << endl; //debug output
             newBook->addChapter(secondWord);
-            paraNumber = 0;
-        }
-        else 
+        } //otherwise adds paragraph
+        else
         {
+            cout << "\nadding Paragraph: " << nextPara.str() << "|" << endl;
             nextPara.seekg(loc);
             unique_ptr<stringstream> newPara = make_unique<stringstream>();
-            *newPara << nextPara.rdbuf();
+            *newPara << nextPara.str();
             newBook->addParagraph(move(newPara));
         }
 
-        
-       /* THOWING SEGFAULTS HERE
+        /* THOWING SEGFAULTS HERE
         else
         { // else it is not a chapter titlea and is a normal paragraph
             int lineNumber = 0;
@@ -218,4 +264,3 @@ unique_ptr<Book> Reader::read()
     }
     return move(newBook);
 }
-
