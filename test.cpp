@@ -39,36 +39,8 @@ int main(int argc, char *argv[])
     cout << endl;
     book_->printBook();
 
-    /*
     cout << endl;
-    string test = "this is\n";
-    string test2 = "this is a test\n";
-    stringstream nextPara;
-    nextPara << test;
-    string firstWord, secondWord, thirdWord, secondLine, nextLine;
-    stringstream para;
-    para << nextPara.rdbuf();
-    getline(nextPara, nextLine);
-    para >> firstWord;
-    para >> secondWord;
-    para >> thirdWord;
-    cout << "First word: " << firstWord << endl 
-        << "Second word: " << secondWord << endl 
-        << "Third word: " << thirdWord << endl;
-    if (thirdWord == "\n") cout << "It's a newline!";
-    if (thirdWord == "") cout << "It's empty!";
-
-    nextPara.clear();
-    para.clear();
-
-    nextPara << test2;
-    para << nextPara.rdbuf();
-    getline(nextPara, nextLine);
-    para >> firstWord;
-    para >> secondWord;
-    para >> thirdWord;
-    cout << "First word: " << firstWord << endl 
-        << "Second word: " << secondWord << endl 
-        << "Third word: " << thirdWord << endl;
-*/
+    book_->printIndex();
+    cout << endl;
+    book_->printOccurrances();
 }

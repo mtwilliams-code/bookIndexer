@@ -26,7 +26,7 @@ string Chapter::getIndexEntries(string word) const
     string entries = "";
     for (auto P : paragraphs) 
     {
-        entries += P.getIndexEntry(word) + " ";
+        entries += P.getIndexEntry(word);
     }
     return entries;
 }

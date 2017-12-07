@@ -27,6 +27,7 @@ class Book
     void printIgnored() const;
     void printChapters() const;
     void printBook() const;
+    void printOccurrances() const;
     void addParagraph(std::unique_ptr<std::stringstream> P);
     void addWord(std::string word);
     void removeWord(std::string word);

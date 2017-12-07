@@ -52,7 +52,7 @@ string Paragraph::getIndexEntry(string word) const
 {
     map<string, string>::const_iterator itr = location.find(word);
     if ( itr != location.end() ) {
-        return itr->second;
+        return (itr->second + " ");
     }
     return "";
 }
