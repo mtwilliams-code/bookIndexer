@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
     }
     Reader reader_(bookname, synname, ignorename);
     unique_ptr<Book> book_ = reader_.read();
+    /* //debug output
     book_->printSynonyms();
     book_->printIgnored();
     book_->printChapters();
@@ -40,6 +41,7 @@ int main(int argc, char *argv[])
     book_->printBook();
 
     cout << endl;
+*/
     book_->printIndex();
     cout << endl;
     book_->printOccurrances();
