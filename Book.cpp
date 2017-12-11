@@ -93,7 +93,7 @@ void Book::printIndex() const
             }
             if (C.getOccurrances(word) > 0)
             {
-                temp2.splice(temp3.end(),C.getIndexEntries(word));
+                temp2.splice(temp2.end(),C.getIndexEntries(word));
             }
         }
         for (auto entry : temp1)
@@ -102,10 +102,10 @@ void Book::printIndex() const
         {
             if (entry != *(--temp3.end()))
                 cout << entry << ", ";
-            else cout << entry;
+            else cout << entry << " ";
         }
         if (word != *(--allWords.end()))
-            cout << endl;
+            cout << "\n";
     }
 
 }    
