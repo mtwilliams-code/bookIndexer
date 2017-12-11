@@ -77,7 +77,7 @@ void Book::printIndex() const
     for (const auto& word : allWords)
     {
         cout << word << " ";
-        string temp1 = "", temp2 = "", temp3 = "";
+        list<string> temp1, temp2, temp3;
         int max = 0;
         for(const auto& C: chapters)
         {
@@ -89,17 +89,26 @@ void Book::printIndex() const
             }
             else if (C.getOccurrances(word) > 0)
             {
-                temp3 += C.getIndexEntries(word);
+                temp3.splice(temp3.end(),C.getIndexEntries(word));
             }
             if (C.getOccurrances(word) > 0)
             {
-                temp2 += C.getIndexEntries(word);
+                temp2.splice(temp3.end(),C.getIndexEntries(word));
             }
         }
-        cout << temp1 << temp3;
-        cout << endl;
+        for (auto entry : temp1)
+            cout << entry << ", ";
+        for (auto entry : temp3)
+        {
+            if (entry != *(--temp3.end()))
+                cout << entry << ", ";
+            else cout << entry;
+        }
+        if (word != *(--allWords.end()))
+            cout << endl;
     }
-}
+
+}    
 
 void Book::printAllWords() const
 {

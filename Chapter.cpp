@@ -21,12 +21,13 @@ void Chapter::printChapter() const
     }
 }
 
-string Chapter::getIndexEntries(string word) const 
+list<string> Chapter::getIndexEntries(string word) const 
 {
-    string entries = "";
+    list<string> entries;
     for (auto P : paragraphs) 
     {
-        entries += P.getIndexEntry(word);
+        if (P.getIndexEntry(word) != "")
+            entries.push_back(P.getIndexEntry(word));
     }
     return entries;
 }

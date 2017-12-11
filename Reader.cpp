@@ -97,7 +97,7 @@ unique_ptr<Book> Reader::read()
         string ignoredWord;
         line << nextLine;
         line >> ignoredWord;
-        if (ignoredWord != "chapter" && !ignoredWord.empty())
+        if (!ignoredWord.empty())
             ignore.emplace(ignoredWord);
     }
 
@@ -136,16 +136,16 @@ unique_ptr<Book> Reader::read()
         }
     }
     //changes synonyms to farthest synonym
-    for (map<string, string>::iterator itr1 = synonyms.begin(); itr1 != synonyms.end(); ++itr1)
+    for (auto itr1 = synonyms.begin(); itr1 != synonyms.end(); ++itr1)
     {
-        map<string, string>::iterator itr2 = itr1;
+        auto itr2 = itr1;
         while ((itr2 = synonyms.find(itr2->second)) != synonyms.end())
         {
             itr1->second = itr2->second;
         }
     }
 
-    // debug stuff int count = 1;
+    //this will create the book and then read the book.txt file and insert it into the book while changing synonyms and discarding ignored words
     unique_ptr<Book> newBook = make_unique<Book>(synonyms, ignore);
     while (!bookFile.eof())
     {
@@ -168,16 +168,19 @@ unique_ptr<Book> Reader::read()
                 nextLineStream << nextLine;
             while (nextLineStream >> word)
             {
-                if (!ignore.count(word))
+                if (word == "chapter")
+                {
+                    finishedLineStream << word << " ";
+                }
+                else if (!ignore.count(word) )
                 {
                     map<string, string>::iterator itr;
-                    if ((itr = synonyms.find(word)) != synonyms.end())
+                    if ((itr = synonyms.find(word)) != synonyms.end() )
                     {
                         word = itr->second;
                     }
                     if (!isBlankLine(word))
                     {
-                        newBook->addWord(word);
                         finishedLineStream << word << " ";
                     }
                 }
@@ -203,11 +206,11 @@ unique_ptr<Book> Reader::read()
             nextPara << "\n";
         }
 
+        //cout << "\"" << nextPara.str() << "\"" << endl;
         stringstream temp;
         //checks if paragraph is chapter title
         string firstWord, secondWord, thirdWord, firstLine, secondLine;
-        int loc = nextPara.tellg();
-        nextPara.seekg(loc);
+        size_t loc = nextPara.tellg();
         std::getline(nextPara, firstLine);
         std::getline(nextPara, secondLine);
         temp << firstLine;
@@ -217,15 +220,34 @@ unique_ptr<Book> Reader::read()
         if (firstWord == "chapter" && secondWord != "" && thirdWord == "" && isBlankLine(secondLine))
         { // if it is chapter, another word, and then a blank line, it is a chapter title
             newBook->addChapter(secondWord);
-            newBook->removeWord(secondWord);
-        } //otherwise adds paragraph
+        } //otherwise adds paragraph and processes occurances of word chapter
         else
         {
             nextPara.seekg(loc);
-            unique_ptr<stringstream> newPara = make_unique<stringstream>();
-            *newPara << nextPara.str();
-            newBook->addParagraph(move(newPara));
+            //first wego through and replace instances of chapter
+            string word = "chapter";
+            firstLine = nextPara.str();
+            map<string, string>::iterator itr;
+            if ((itr = synonyms.find(word)) != synonyms.end())
+                word = itr->second + " ";
+            else if (ignore.count(word))
+                word = "";
+            //replaces all instances of chapter with its synonym or nothing if it is ignored
+            while ((loc = firstLine.find("chapter")) != string::npos)
+            {
+                firstLine.replace(loc, 8, word);
+            }
+            nextPara.str(firstLine);
+            unique_ptr<stringstream> tempStreamPTR = make_unique<stringstream>(nextPara.str());
+            //these two while loops add every word to book
+            temp.str(firstLine);
+            while (temp >> firstWord)
+            {
+                newBook->addWord(firstWord);
+            }
+            newBook->addParagraph(move(tempStreamPTR));
         }
     }
+
     return move(newBook);
 }

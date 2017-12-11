@@ -24,7 +24,7 @@ class Chapter
     Paragraph *getParagraph(int N) const;
     int getParagraphCount() const;
     void printChapter() const;
-    std::string getIndexEntries(std::string word) const;
+    std::list<std::string> getIndexEntries(std::string word) const;
     int getOccurrances(std::string word) const;
 };
 

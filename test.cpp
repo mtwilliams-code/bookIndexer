@@ -44,5 +44,4 @@ int main(int argc, char *argv[])
 */
     book_->printIndex();
     cout << endl;
-    book_->printOccurrances();
 }
